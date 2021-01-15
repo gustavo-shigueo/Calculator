@@ -24,7 +24,7 @@ const handleBackspace = () => {
 
 const handleNegativeBtn = () => {
   const { value } = output
-  const [ longRegex1, longRegex2 ] = [ /([\+\*\/\-]\s)(\d+|\d+\.\d?)$/g, /([\+\*\/\-]\s)(\-)(\d+|\d+\.\d?)$/g ]
+  const [ longRegex1, longRegex2 ] = [ /([\+\*\/\-]\s)(\d+|\d+\.\d{0,})$/g, /([\+\*\/\-]\s)(\-)(\d+|\d+\.\d{0,})$/g ]
   if (value === '' || value.match(/^(\d+|\d+\.\d+)$/g)) output.value = `-${value}`
   else if (value.replace(' ', '').match(/^\-\d{0,}(\.\d+)?$/)) output.value = value.substring(1)
   else if (value.match(/[\+\*\/\-]\s$/g)) output.value += '-'
