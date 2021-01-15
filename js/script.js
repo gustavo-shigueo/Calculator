@@ -15,7 +15,10 @@ const handleOperatorBtn = e => {
   else if (val !== '-') output.value += ` ${op} `
 }
 
-const handleNumberBtn = e => output.value += e.target.getAttribute('data-number')
+const handleNumberBtn = e => {
+  if (output.value[output.value.length - 1] === '0') handleBackspace()
+  output.value += e.target.getAttribute('data-number')
+}
 
 const handleBackspace = () => {
   const amountToDelete = output.value[output.value.length - 1] !== ' ' ? 1 : 3
