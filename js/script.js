@@ -16,7 +16,7 @@ const handleOperatorBtn = e => {
 }
 
 const handleNumberBtn = e => {
-  if (output.value.match(/\s?0$/g)) handleBackspace()
+  if (output.value.match(/(\s0$|^0$)/g)) handleBackspace()
   output.value += e.target.getAttribute('data-number')
 }
 
