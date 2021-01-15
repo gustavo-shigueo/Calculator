@@ -16,6 +16,7 @@ const handleOperatorBtn = e => {
 }
 
 const handleNumberBtn = e => {
+  // This is to prevent accidental octal conversion due to leading zero (e.g.: 010 = 8, 022 = 18)
   if (output.value.match(/(\s0$|^0$)/g)) handleBackspace()
   output.value += e.target.getAttribute('data-number')
 }
