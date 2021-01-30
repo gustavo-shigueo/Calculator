@@ -7,20 +7,21 @@ const clear = document.querySelector('.clear')
 const equal = document.querySelector('.equals')
 const point = document.querySelector('.point')
 
-const handleOperatorBtn = e => {
-  const [ op, val, len ] = [ e.target.getAttribute('data-operator'), output.value, output.value.length ]
+const handleOperatorBtn = operator => {
+  const [ op, val, len ] = [ operator, output.value, output.value.length ]
 
   // These checks prevent things like '5 + * 1' and '2. - 1', which would throw errors on handleEquals()
   if (val === '' || val === '.') output.value = `0 ${op} `
   else if (val.match(/.+[\+\-\*\/]\s$/g)) output.value = `${val.substring(0, len - 2)}${op} `
+  else if (val.match(/.+[\+\-\*\/]\s\.$/g)) output.value = `${val.substring(0, len - 1)}0 ${op} `
   else if (val.match(/.+\.$/g)) output.value = `${val.substring(0, len - 1)} ${op} `
   else if (val !== '-') output.value += ` ${op} `
 }
 
-const handleNumberBtn = e => {
+const handleNumberBtn = number => {
   // This is to prevent accidental octal conversion due to leading zero (e.g.: 010 = 8)... That was hard to debug
   if (output.value.match(/(\s0$|^0$)/g)) handleBackspace()
-  output.value += e.target.getAttribute('data-number')
+  output.value += number
 }
 
 const handleBackspace = () => {
@@ -63,11 +64,35 @@ const handleEquals = () => {
 // Clears the output
 const handleClear = () => output.value = ''
 
-operators.forEach(operator => operator.addEventListener('click', e => handleOperatorBtn(e)))
-numbers.forEach(number => number.addEventListener('click', e => handleNumberBtn(e)))
+operators.forEach(operator => operator.addEventListener('click', e => handleOperatorBtn(e.target.getAttribute('data-operator'))))
+numbers.forEach(number => number.addEventListener('click', e => handleNumberBtn(e.target.getAttribute('data-number'))))
 
 backspace.addEventListener('click', handleBackspace)
 negative.addEventListener('click', handleNegativeBtn)
 point.addEventListener('click', handlePointBtn)
 equal.addEventListener('click', handleEquals)
 clear.addEventListener('click', handleClear)
+
+// Getting keyboard input
+const nums = Array(10).fill().map((_value, index) => index.toString())
+const ops = ['+', '-', '/', '*']
+
+document.addEventListener('keydown', e => {
+  switch (e.key) {
+    case 'Escape':
+      handleClear()
+      break
+    case 'Backspace':
+      handleBackspace()
+      break
+    case 'Enter': case '=':
+      handleEquals()
+      break
+    case '.': case ',':
+      handlePointBtn()
+      break
+    default:
+      if (nums.includes(e.key)) handleNumberBtn(e.key)
+      else if (ops.includes(e.key)) handleOperatorBtn(e.key)
+  }
+})
